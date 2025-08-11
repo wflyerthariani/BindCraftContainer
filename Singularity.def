@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04
+
+%files
+    environment.yml /opt/environment.yml
+    BindCraft/functions /opt/BindCraft/functions
+    BindCraft/bindcraft.py /opt/BindCraft/bindcraft.py
+
+%environment
+    export PATH=/opt/miniconda/envs/BindCraft/bin:$PATH
+    export CONDA_PREFIX=/opt/miniconda/envs/BindCraft
+    export LD_LIBRARY_PATH=/opt/miniconda/envs/BindCraft/lib:$LD_LIBRARY_PATH
+    export PYTHONNOUSERSITE=1
+
+%post
+    chmod 777 /tmp
+    echo "[INFO] Updating apt cache"
+    apt-get update || true
+    apt-get install -y \
+        libglib2.0-0 \
+        ca-certificates \
+        wget \
+        git \
+        tar \
+        bzip2 || true
+
+    echo "[INFO] Installing Miniconda"
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh
+    bash /tmp/miniconda.sh -b -p /opt/miniconda
+    rm /tmp/miniconda.sh
+    export PATH=/opt/miniconda/bin:$PATH
+
+    echo "[INFO] Configuring Conda to avoid defaults"
+    conda config --system --set always_yes yes
+    conda config --system --remove channels defaults || true
+    conda config --system --add channels conda-forge
+    conda config --system --add channels https://conda.graylab.jhu.edu
+
+    echo "[INFO] Creating Conda environment from environment.yml"
+    export CONDA_OVERRIDE_CUDA="12.9"
+    conda env create -f /opt/environment.yml -n BindCraft
+    /opt/miniconda/envs/BindCraft/bin/pip install git+https://github.com/sokrypton/ColabDesign.git --no-deps
+
+    /opt/miniconda/envs/BindCraft/bin/pip uninstall -y jaxlib jax jax-cuda12-plugin jax-cuda12-pjrt
+    /opt/miniconda/envs/BindCraft/bin/pip cache purge
+
+    /opt/miniconda/envs/BindCraft/bin/pip install --upgrade "jax[cuda12_local]"
+
+    echo "[INFO] Cleaning up"
+    conda clean -afy
+
+%runscript
+    exec /opt/miniconda/envs/BindCraft/bin/python /opt/BindCraft/bindcraft.py "$@"

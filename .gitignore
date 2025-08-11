@@ -1,1 +1,4 @@
-./BindCraft
+BindCraft/
+slurm*
+*.sif
+dcgm/

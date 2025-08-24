@@ -1,0 +1,9 @@
+{
+    "design_path": "/ibex/user/thariaaa/BindCraftContainer/test/",
+    "binder_name": "PDL1",
+    "starting_pdb": "/ibex/user/thariaaa/BindCraftContainer/PDL1.pdb",
+    "chains": "A",
+    "target_hotspot_residues": "56",
+    "lengths": [65, 150],
+    "number_of_final_designs": 100
+}

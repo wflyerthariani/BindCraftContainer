@@ -3,8 +3,6 @@ From: nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04
 
 %files
     environment.yml /opt/environment.yml
-    BindCraft/functions /opt/BindCraft/functions
-    BindCraft/bindcraft.py /opt/BindCraft/bindcraft.py
 
 %environment
     export PATH=/opt/miniconda/envs/BindCraft/bin:$PATH
@@ -45,6 +43,11 @@ From: nvidia/cuda:12.9.1-cudnn-devel-ubuntu22.04
     /opt/miniconda/envs/BindCraft/bin/pip cache purge
 
     /opt/miniconda/envs/BindCraft/bin/pip install --upgrade "jax[cuda12_local]"
+
+    echo "[INFO] Cloning BindCraft repo"
+    git clone https://github.com/wflyerthariani/BindCraft /opt/BindCraft
+    cd /opt/BindCraft
+    git checkout d160906bba761b00236eb729e825805a4219e8fc
 
     echo "[INFO] Cleaning up"
     conda clean -afy

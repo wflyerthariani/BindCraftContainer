@@ -11,4 +11,4 @@
 
 singularity run --nv --cleanenv --bind /ibex/reference/KSL/:/ibex/reference/KSL/ \
     BindCraft.sif \
-    --settings '/ibex/user/thariaaa/BindCraftContainer/BindCraft/settings_target/PDL1.json' --filters '/ibex/user/thariaaa/BindCraftContainer/BindCraft/settings_filters/default_filters.json' --advanced '/ibex/user/thariaaa/BindCraftContainer/BindCraft/settings_advanced/default_4stage_multimer.json'
+    --settings './PDL1.json' --filters './default_filters.json' --advanced './default_4stage_multimer.json'

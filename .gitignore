@@ -2,3 +2,4 @@ BindCraft/
 slurm*
 *.sif
 dcgm/
+test/
